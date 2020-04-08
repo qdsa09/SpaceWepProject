@@ -1,0 +1,113 @@
+----------------------------------------상세 페이지 보기
+<select id="spaceDetail" parameterType="hashmap">
+	<![CDATA[
+		SELECT * FROM SPACE_LIST WHERE SPACE_ID = #{SPACE_ID}
+	]]>
+</select>
+
+
+----------------------------------------답변 대기 리스트
+<select id="spaceQNAList" parameterType="hashmap">
+	<![CDATA[
+		SELECT 
+			S.SPACE_ID,
+			SPACE_TITLE,
+			QNA_NUM,
+			QNA_TITLE,
+			QNA_CNT,
+			QNA_ANS
+		FROM 
+			SPACE_LIST S 
+		INNER JOIN 
+			SPACE_QNA_LIST Q
+		ON 
+			S.SPACE_ID = Q.SPACE_ID
+		WHERE 
+			SPACE_HOST = #{USER_ID} AND QNA_ANS = 'N'
+	]]>
+</select>
+
+----------------------------------------답변 달기
+<update id="spaceQNAComment" parameterType="hashmap">
+	<![CDATA[
+		UPDATE 
+			SPACE_QNA_LIST
+		SET 
+			QNA_CMT = #{COMMENT}
+		WHERE 
+			QNA_NUM = #{QNA_NUM}
+	]]>
+</update>
+
+---------------------------------------QNA 삭제
+<update id="spaceQNAComment" parameterType="hashmap">
+	<![CDATA[
+		DELETE 
+			SPACE_QNA_LIST
+		WHERE 
+			QNA_NUM = #{QNA_NUM}
+	]]>
+</update>
+
+
+
+----------------------------------------답변 완료 리스트
+<select id="spaceQNACompList" parameterType="hashmap">
+	<![CDATA[
+		SELECT 
+			S.SPACE_ID,
+			SPACE_TITLE,
+			QNA_NUM,
+			QNA_TITLE,
+			QNA_CNT,
+			QNA_ANS
+		FROM 
+			SPACE_LIST S 
+		INNER JOIN 
+			SPACE_QNA_LIST Q
+		ON 
+			S.SPACE_ID = Q.SPACE_ID
+		WHERE 
+			SPACE_HOST = #{USER_ID} AND QNA_ANS = 'Y'
+	]]>
+</select>
+
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------후기 리스트
+<select id="spaceReplyLIST" parameterType="hashmap">
+	<![CDATA[
+		SELECT 
+			S.SPACE_ID,
+			SPACE_TITLE,
+			REPLY_NUM,
+			REPLY_CNT,
+			REPLY_IMG
+		FROM 
+			SPACE_LIST S 
+		INNER JOIN 
+			REPLY_LIST R
+		ON 
+			S.SPACE_ID = R.SPACE_ID
+		WHERE 
+			SPACE_HOST = #{USER_ID};
+	]]>
+</select>
+---------------------------------------후기 삭제
+<update id="deleteReply" parameterType="hashmap">
+	<![CDATA[
+		DELETE 
+			REPLY_LIST
+		WHERE 
+			REPLY_NUM = #{REPLY_NUM}
+	]]>
+</update>

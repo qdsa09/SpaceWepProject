@@ -1,0 +1,125 @@
+1. 등록된 공간 리스트
+
+<select id="" parameterType="hashMap" resultType="hashMap">
+<![CDATA[ 
+	SELECT 
+		S.SPACE_ID, 
+		S.SPACE_TITLE, 
+		S.SPACE_USE, 
+		S.SPACE_POS, 
+		S.SPACE_PRI, 
+		S.SPACE_IMG, 
+		S.SPACE_HOST,
+		U.USER_NAME,
+		U.USER_PHONE, 
+		U.USER_EMAIL 
+	FROM
+		SPACE_LIST S, 
+		USER_LIST U 
+	WHERE 
+		SPACE_HOLD = 'N' AND SPACE_DEL_GB = 'N'
+    ORDER BY SPACE_ID DESC
+]]>
+</select>
+
+======================================================================
+
+2. 등록완료후 보류한 공간 리스트
+
+<select id="" parameterType="hashMap" resultType="hashMap">
+<![CDATA[ 
+	SELECT 
+		S.SPACE_ID, 
+		S.SPACE_TITLE, 
+		S.SPACE_USE, 
+		S.SPACE_POS, 
+		S.SPACE_PRI, 
+		S.SPACE_IMG, 
+		S.SPACE_HOST,
+		U.USER_NAME,
+		U.USER_PHONE, 
+		U.USER_EMAIL 
+	FROM
+		SPACE_LIST S, 
+		USER_LIST U 
+	WHERE 
+		SPACE_HOLD = 'Y' AND SPACE_DEL_GB = 'N'
+    ORDER BY SPACE_ID DESC
+]]>
+</select>
+
+======================================================================
+
+3. 등록된 공간 삭제하기
+
+SELECT 
+		S.SPACE_ID, 
+		S.SPACE_TITLE, 
+		S.SPACE_USE, 
+		S.SPACE_POS, 
+		S.SPACE_PRI, 
+		S.SPACE_IMG, 
+		S.SPACE_HOST,
+		U.USER_NAME,
+		U.USER_PHONE, 
+		U.USER_EMAIL 
+	FROM
+		SPACE_LIST S, 
+		USER_LIST U 
+	WHERE 
+		SPACE_POS LIKE '%지구%' 
+    ORDER BY SPACE_ID DESC
+	
+	
+
+<update id="" parameterType="hashmap">
+<![CDATA[
+	update SPACE_LIST set SPACE_DEL_GB='Y' where SPACE_ID =#{SPACE_ID}
+ ]]>
+</update>
+
+======================================================================
+
+4. 등록된 공간 보류하기
+
+<update id="" parameterType="hashmap">
+<![CDATA[
+	update SPACE_LIST set SPACE_HOLD ='Y' where SPACE_ID =#{SPACE_ID}
+ ]]>
+</update>
+
+======================================================================
+
+5. 등록된 공간 관리 검색기능
+(인증 안된 방식)
+<select id="" parameterType="hashmap">
+<![CDATA[
+	SELECT 
+		S.SPACE_ID, 
+		S.SPACE_TITLE, 
+		S.SPACE_USE, 
+		S.SPACE_POS, 
+		S.SPACE_PRI, 
+		S.SPACE_IMG, 
+		S.SPACE_HOST,
+		U.USER_NAME,
+		U.USER_PHONE, 
+		U.USER_EMAIL 
+	FROM
+		SPACE_LIST S, 
+		USER_LIST U 
+	WHERE 
+		<include refid="search"></include>
+    ORDER BY SPACE_ID DESC
+
+]]>
+</select>
+
+코드작성
+<sql id = "search">
+	<if test="searchtype != null">
+		<if test="searchType.equals()"> SPACE_TITLE LIKE '%#{search}%'</if>
+		<if test="searchType.equals()"> SPACE_HOST LIKE '%#{search}%'</if>
+		<if test="searchType.equals()"> SPACE_POS LIKE '%#{search}%'</if>
+	</if>
+</sql>	

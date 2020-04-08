@@ -1,0 +1,106 @@
+상세 페이지 보기
+<select id="" parameterType="hashmap">
+<![CDATA[
+	SELECT * FROM SPACE_LIST WHERE SPACE_ID = #{SPACE_ID};
+]]>
+</select>
+
+상세페이지 QNA리스트
+<select id="" parameterType="hashmap">
+<![CDATA[
+	SELECT * FROM SPACE_QNA_LIST 
+	WHERE
+		SPACE_ID = #{SPACE_ID}
+	ORDER BY QNA_NUM DESC
+]]>
+</select>
+
+상세페이지 QNA등록
+<insert id="" parameterType="hashmap">
+<![CDATA[
+INSERT INTO SPACE_QNA_LIST (
+	USER_ID,
+	SPACE_ID,
+	QNA_NUM,
+	QNA_TITLE,
+	QNA_CNT,
+	QNA_DATE,
+	QNA_ANS,
+	QNA_DEL
+)
+VALUES(
+	#{USER_ID},
+	#{SPACE_ID},
+	QNA_NUM_SEQ.NEXTVAL,
+	#{QNA_TITLE},
+	#{QNA_CONTENT},
+	SYSDATE,
+	'N',
+	'N'
+)
+]]>
+</insert>
+
+상세 페이지 QNA 삭제
+<update id="" parameterType="hashmap">
+<![CDATA[
+	UPDATE SPACE_QNA_LIST 
+	SET 
+		QNA_DEL = 'Y'
+	WHERE
+		QNA_NUM = #{QNA_NUM}	
+]]>
+</update>
+
+--상세 페이지 리뷰 리스트
+<select id="" parameterType="hashmap">
+<![CDATA[
+SELECT 
+	USER_ID,
+	REPLY_NUM,
+	REPLY_CNT,
+	REPLY_CMT,
+	REPLY_IMG,
+	REPLY_DATE
+FROM 
+	REPLY_LIST 
+WHERE 
+	SPACE_ID=#{SPACE_ID} 
+ORDER BY REPLY_NUM;
+]]>
+</select>
+
+--상세 페이지 리뷰 삭제
+<select id="" parameterType="hashmap">
+<![CDATA[
+	UPDATE REPLY_LIST SET REPLY_DEL='Y' WHERE REPLY_NUM = #{REPLY_NUM}
+</select>
+
+예약공간 확인하기
+<select id="" parameterType="hashmap">
+<![CDATA[
+SELECT 
+	ROW_NUMBER()OVER(ORDER BY RES_DATE) RNUM, 
+	RES.*
+FROM(
+	SELECT
+		R.RES_DATE,
+		S.SPACE_TITLE,
+		S.SPACE_IMG,
+		R.RES_PRI,
+		S.SPACE_POS,
+		S.SPACE_SIZE,
+		R.RES_NAME,
+		R.USER_PHONE,
+		R.RES_EMAIL
+	FROM
+		SPACE_LIST S
+	INNER JOIN
+		RES_LIST R
+	ON
+		S.SPACE_ID = R.RES_SPACE_ID
+	WHERE
+		USER_ID = #{USER_ID}
+)RES
+]]>
+</select>

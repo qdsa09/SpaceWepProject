@@ -1,0 +1,92 @@
+--공간 신청 리스트
+<select id="selectApplyList" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		SELECT 
+			APPLY_NUM, 
+			APPLY_MODIFY,
+			APPLY_IMG,
+			APPLY_TITLE,
+			APPLY_POS,
+			APPLY_PRI,
+			APPLY_USE
+  			APPLY_ID,
+			USER_ID,
+			USER_NAME,
+			USER_PHONE,
+			USER_EMAIL
+		FROM 
+			SPACE_APPLY_LIST
+		INNER JOIN 
+			USER_LIST
+		ON 
+			APPLY_ID=USER_ID
+		ORDER BY APPLY_NUM DESC
+	]]>
+</select>
+
+--공간 신청 검색 조건 리스트
+<select id="selectSearchApplyList" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		SELECT
+			APPLY_NUM, 
+			APPLY_MODIFY,
+			APPLY_IMG,
+			APPLY_TITLE,
+			APPLY_POS,
+			APPLY_PRI,
+			APPLY_USE
+   			APPLY_ID,
+			USER_ID,
+			USER_NAME,
+			USER_PHONE,
+			USER_EMAIL
+		FROM
+			SPACE_APPLY_LIST
+		INNER JOIN 
+			USER_LIST
+		ON 
+			APPLY_ID=USER_ID
+		WHERE 
+			<if test = "searchType.equals('id')">
+			USER_ID LIKE '%#{search}%'
+			</if>
+			<if test = "searchType.equals('title')">
+			APPLY_TITLE LIKE '%#{search}%'
+			</if>
+		ORDER BY APPLY_NUM DESC
+	]]>
+</select>
+
+----------------------------------공간 신청 글 삭제
+<update id="deleteApplyList" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		DELETE
+		FROM 
+			SPACE_APPLY_LIST 
+		WHERE 
+			APPLY_NUM = #{APPLY_NUM};
+
+	]]>
+</update>
+
+----------------------------------공간 신청 글 예약(요일) 삭제
+<update id="deleteApplyList" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		DELETE
+		FROM 
+			SRES_DAY
+		WHERE
+			SPACE_ID = #{APPLY_NUM};
+	]]>
+</update>
+
+----------------------------------공간 신청 글 예약(날짜)삭제
+<update id="deleteApplyList" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		DELETE
+		FROM 
+			SRES_DATE 
+		WHERE 
+			SPACE_ID = #{APPLY_NUM};
+	]]>
+</update>

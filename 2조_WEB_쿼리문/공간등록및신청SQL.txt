@@ -1,0 +1,198 @@
+
+---------------------공간 등록 신청---------------------------------------
+신규 신청 게시글 번호 할당 (반환값으로 아래 신청글 번호 할당)
+<select id="" parameterType="hashmap">
+<![CDATA[
+SELECT SPACE_ID_SEQ.NEXTVAL AS SAPCE_ID FROM DUAL;
+
+]]>
+</select>
+
+
+공간등록 신청 페이지
+<insert id="" parameterType="hashmap">
+<![CDATA[
+INSERT INTO SPACE_APPLY_LIST(
+	APPLY_NUM,
+	APPLY_TITLE,
+	APPLY_DETAIL,
+	APPLY_USE,
+	APPLY_IMG,
+	APPLY_POS,
+	APPLY_PRI,
+	APPLY_SIZE,
+	APPLY_TAG,
+	APPLY_OPT,
+	APPLY_ID,
+	APPLY_MODIFY,
+	APPLY_PERSON,
+	APPLY_HORIZON,
+	APPLY_VERTICAL,
+	APPLY_HEIGHT,
+	APPLY_RES_TYPE
+	APPLY_SEAT,
+	APPLY_PARKING
+	)
+VALUES(
+	<if test = "SPACE_ID==NULL">
+	SPACE_ID_SEQ.NEXTVAL,
+	</if>
+	<if test = "SPACE_ID !=NULL">
+	#{SPACE_ID},
+	</if>
+	#{TITLE},
+	#{DETAIL},
+	#{USE},
+	#{IMAGE},
+	#{POS},
+	#{PRI},
+	#{SIZE},
+	#{TAG},
+	#{OPT},
+	#{ID},
+	#{MODIFY},
+	#{PERSON},
+	#{HORIZON},
+	#{VERTICAL},
+	#{HEIGHT},
+	#{RES_TYPE},
+	#{SEAT},
+	#{PARKING}
+	)
+
+]]>
+</insert>
+
+
+공간등록 예약목록 (요일 TYPE == "DAY")
+<insert id="" parameterType="hashmap">
+<![CDATA[
+INSERT INTO SRES_DAY(
+	SPACE_ID,
+	SRES_MON,
+	SRES_TUE,
+	SRES_WED,
+	SRES_THU,
+	SRES_FRI,
+	SRES_SAT,
+	SRES_SUN
+	)
+VALUES(
+	#{SPACE_ID},
+	#{MON_PRI},
+	#{TUE_PRI},
+	#{WED_PRI},
+	#{THU_PRI},
+	#{FRI_PRI},
+	#{SAT_PRI},
+	#{SUN_PRI}
+	)
+
+]]>
+</insert>
+
+
+공간등록 예약목록 (날짜 TYPE=="DATE")
+<insert id="" parameterType="hashmap">
+<![CDATA[
+INSERT INTO SRES_DAY(
+	SPACE_ID,
+	SRES_DATE,
+	SRES_PRI
+	)
+VALUES(
+	#{SPACE_ID},
+	#{DATE},
+	#{PRI}
+	)
+
+]]>
+</insert>
+
+------------------------공간 등록-----------------------------------
+공간 등록을 위한 신청양식 호출
+<select id="" parameterType="hashmap">
+<![CDATA[
+SELECT * FROM SPACE_APPLY_LIST WHERE APPLY_NUM = {SPACE_ID};
+]]>
+</select>
+
+
+신청목록 중 신규 공간 등록 (APPLY_LIST 'MODIFY' == 'N') --수정글 아닐시
+<insert id="" parameterType="hashmap">
+<![CDATA[
+INSERT INTO SPACE_LIST(
+	SPACE_ID,
+	SPACE_TITLE,
+	SPACE_DETAIL,
+	SPACE_USE,
+	SPACE_IMG,
+	SPACE_POS,
+	SPACE_PRI,
+	SPACE_SIZE,
+	SPACE_OPT,
+	SPACE_TAG,
+	SPACE_HOST,
+	SPACE_CMT_COUNT,
+	SPACE_READ,
+	SPACE_DEL_GB,
+	SPACE_HOLD,
+	SPACE_SEAT,
+	SPACE_PARKING,
+	SPACE_PERSON,
+	SPACE_HORIZON,
+	SPACE_VERTICAL,
+	SPACE_HEIGHT,
+	SPACE_RES_TYPE
+	)
+VALUES(
+	#{APPLY_NUM},
+	#{APPLY_TITLE},
+	#{APPLY_DETAIL},
+	#{APPLY_USE},
+	#{APPLY_IMG},
+	#{APPLY_POS},
+	#{APPLY_PRI},
+	#{APPLY_SIZE},
+	#{APPLY_OPT},
+	#{APPLY_TAG},
+	#{APPLY_ID},
+	0,
+	0,
+	'N',
+	'N',
+	#{APPLY_SEAT},
+	#{APPLY_PARKING},
+	#{APPLY_PERSON},
+	#{APPLY_HORIZON},
+	#{APPLY_VERTICAL},
+	#{APPLY_HEIGHT},
+	#{APPLY_RES_TYPE}
+)
+]]>
+</insert>
+
+신청 목록 중 공간 수정(APPLY_LIST 'MODIFY' == 'Y')  --수정글일시
+<update id="" parameterType="hashmap">
+<![CDATA[
+UPDATE SPACE_LIST
+SET
+	SPACE_TITLE = #{APPLY_TITLE},
+ 	SPACE_DETAIL =#{APPLY_DETAIL},
+ 	SPACE_USE =#{APPLY_USE},
+  	SPACE_IMG = #{APPLY_IMG},
+ 	SPACE_POS =#{APPLY_POS},
+ 	SPACE_PRI=#{APPLY_PRI},	 
+	SPACE_SIZE=#{APPLY_SIZE},
+	SPACE_OPT=#{APPLY_OPT},
+	SPACE_TAG=#{APPLY_TAG},
+	SPACE_SEAT=#{APPLY_SEAT},
+ 	SPACE_PARKING=#{APPLY_PARKING},
+ 	SPACE_PERSON=#{APPLY_PERSON},
+ 	SPACE_HORIZON=#{APPLY_HORIZON},
+ 	SPACE_VERTICAL=#{APPLY_VERTICAL},
+ 	SPACE_HEIGHT=#{APPLY_HEIGHT},
+ 	SPACE_RES_TYPE = #{APPLY_RES_TYPE}
+WHERE SPACE_ID = #{SPACE_ID};
+]]>
+</update>

@@ -1,0 +1,90 @@
+--기본검색
+<select id="" parameterType="hashmap">
+<![CDATA[
+	SELECT 
+		ROW_NUMBER()OVER(ORDER BY SPACE_ID DESC) AS RNUM,	
+		AA.* 
+	FROM(
+		SELECT
+			space_id,
+			space_title,
+			space_use, 
+			space_img, 
+			space_pos, 
+			space_pri, 
+		FROM SPACE_LIST
+	)AA;
+
+
+조건검색 쿼리
+<select id="" parameterType="hashmap">
+<![CDATA[
+SELECT ROW_NUMBER()OVER(
+<choose>
+	<when test="type.equals('인기순')">
+		ORDER BY SPACE_READ DESC
+	</when>
+	<when test="type.equals('낮은 가격순')">
+		ORDER BY SPACE_PRI DESC
+	</when>
+	<otherwise>
+		ORDER BY SPACE_ID DESC
+	</otherwise>
+</choose>
+) AS RNUM, AA.* FROM
+
+(SELECT 
+	COUNT(*)OVER(ORDER BY SPACE_ID DESC)
+	SPACE_ID
+	SPACE_TITLE,
+	SPACE_USE,
+	SPACE_IMG,
+	SPACE_POS,
+	SPACE_PRI,
+	SRES_DATE
+FROM(
+	SELECT
+		SPACE_LIST.*,
+		SRES_DATE.SRES_DATE 
+	FROM
+		SPACE_LIST
+	INNER JOIN
+		 SRES_DATE
+	ON
+		SPACE_LIST.SPACE_ID = SRES_DATE.SPACE_ID
+	WHERE
+		SRES_DATE
+	BETWEEN 
+		#{START_DATE}
+	AND
+		#{END_DATE}
+		
+
+         )
+WHERE
+	SPACE_ID = SPACE_ID
+<if test = "USE != null">
+AND SPACE_USE LIKE '%#{USE}%'
+</if>
+<if test = "POS != null">
+AND SPACE_POS LIKE '%#{POS}%'
+</if>
+<if test ="SIZE != null">
+AND SPACE_SIZE < 50
+</if>
+<if test="TITLE != null">
+AND SPACE_TITLE LIKE '%#{TITLE}%'
+</if>
+)AA
+
+]]>
+</select>
+
+찜목록 가져오기
+<select id="" parameterType="hashmap">
+<![CDATA[
+SELECT * FROM LIKE_LIST 
+WHERE USER_ID = #{ID}
+
+]]>
+</select>

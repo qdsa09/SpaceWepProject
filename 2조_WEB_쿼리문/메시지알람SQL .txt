@@ -1,0 +1,77 @@
+=================================Space_SQL.xml ( 알람 메시지 관리 SQL )
+
+<select id="selectNewMsgCount" parameterType="String" resultType="Integer">
+	<![CDATA[
+	SELECT
+		COUNT(*) COUNT
+	FROM 
+		MESSAGE_BOX
+	WHERE
+		USER_ID = #{USER_ID} AND READ_CHECK = 'N'
+	]]>
+</select>
+<select id="selectMessage" parameterType="HashMap" resultType="HashMap">
+	<include refid="common.pagingPre"></include>
+	<![CDATA[
+	SELECT
+		ROW_NUMBER() OVER(ORDER BY M_ID DESC)RNUM,
+		M_ID,
+		M_TITLE,
+		M_CONTENT,
+		TO_DATE(TO_CHAR(M_DATE,'YYYYMMDD'),'YYYY/MM/DD') as M_DATE,
+		READ_CHECK
+	FROM 
+		MESSAGE_BOX
+	WHERE
+		USER_ID = #{USER_ID}
+	]]>
+	<include refid="common.pagingPost"></include>
+</select>
+
+<update id="updateMsgRead" parameterType="hashmap">
+<![CDATA[
+	UPDATE 
+		MESSAGE_BOX 
+	SET 
+		READ_CHECK = 'Y'
+	WHERE 
+		M_ID = ${M_ID}
+]]>
+</update>
+
+<delete id="deleteMessage" parameterType="hashmap">
+<![CDATA[
+	DELETE FROM
+		MESSAGE_BOX 
+	WHERE 
+		M_ID = ${M_ID}
+]]>
+</delete>
+
+
+
+
+
+================================Reserve_SQL.xml ( 메시지 전송 SQL)
+<insert id="insertMessage" parameterType="hashmap">
+<![CDATA[
+INSERT INTO
+	MESSAGE_BOX(
+		USER_ID,
+		M_ID,
+		M_TITLE,
+		M_CONTENT,
+		M_DATE,
+		READ_CHECK
+	)
+	VALUES(
+		#{USER_ID},
+		MSG_NUM_SEQ.NEXTVAL,
+		#{TITLE},
+		#{CONTENT},
+		SYSDATE,
+		'N'
+	)
+
+]]>
+</insert>

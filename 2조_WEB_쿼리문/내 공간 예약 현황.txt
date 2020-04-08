@@ -1,0 +1,32 @@
+----------------------------------------상세 페이지 보기
+<select id="spaceDetail" parameterType="hashmap">
+	<![CDATA[
+		SELECT * FROM SPACE_LIST WHERE SPACE_ID = #{SPACE_ID}
+	]]>
+</select>
+
+----------------------------------------내공간 예약 현황
+<select id="searchResList" parameterType="hashmap">
+	<![CDATA[
+		SELECT 
+			SPACE_ID,
+			SPACE_TITLE,
+			SPACE_IMG,
+			RES_APPLY_DATE,
+			RES_CONTENT,
+			RES_REQ,
+			RES_NAME,
+			USER_PHONE,
+			RES_EMAIL
+		FROM 
+			RES_LIST R 
+		JOIN 
+			SPACE_LIST S 
+		ON 
+			R.RES_SPACE_ID = S.SPACE_ID
+		WHERE 
+			S.SPACE_HOST = #{USER_ID} 
+		AND 
+			RES_APPLY_DATE = #{DATE}
+	]]>
+</select>

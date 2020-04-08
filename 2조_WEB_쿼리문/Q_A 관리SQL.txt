@@ -1,0 +1,53 @@
+----------------------------------------Q&A 관리 리스트
+<select id="selectQNAList" parameterType="hashmap">
+	<![CDATA[
+		SELECT 
+			ROW_NUMBER()OVER(ORDER BY ADQNA_NUM DESC),
+			RST.* FROM(
+			SELECT 
+				USER_ID,
+				ADQNA_NUM,
+				ADQNA_TITLE,
+				ADQNA_CNT,
+				ADQNA_CMT,
+				ADQNA_ANS,
+				ADQNA_DATE 
+			FROM 
+				ADMIN_QNA_LIST
+			)RST;
+	]]>
+</select>
+
+----------------------------------------Q&A 글 삭제
+<update id="updateQNAComment" parameterType="hashmap">
+	<![CDATA[
+		DELETE ADMIN_QNA_LIST
+		WHERE ADQNA_NUM = #{ADQNA_NUM};
+	]]>
+</update>
+
+----------------------------------------Q&A 답변 수정
+<update id="updateQNAComment" parameterType="hashmap">
+	<![CDATA[
+		UPDATE 
+			ADMIN_QNA_LIST
+		SET 
+			ADQNA_CMT = #{COMMENT},
+		WHERE 
+			ADQNA_NUM = #{ADQNA_NUM};
+	]]>
+</update>
+
+
+----------------------------------------Q&A 답변 달기
+<update id="updateQNAComment" parameterType="hashmap">
+	<![CDATA[
+		UPDATE 
+			ADMIN_QNA_LIST
+		SET 
+			ADQNA_CMT = #{COMMENT},
+			ADQNA_ANS = 'Y'
+		WHERE 
+			ADQNA_NUM = #{ADQNA_NUM};
+	]]>
+</update>

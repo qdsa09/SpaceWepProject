@@ -1,0 +1,135 @@
+----------------------------------------상세 페이지 보기
+<select id="spaceDetail" parameterType="hashmap">
+	<![CDATA[
+		SELECT * FROM SPACE_LIST WHERE SPACE_ID = #{SPACE_ID};
+	]]>
+</select>
+
+----------------------------------공간 등록 글 리스트
+<select id="selectMySpaceList" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		SELECT 
+			SPACE_ID,
+			SPACE_TITLE,
+			SPACE_SIZE,
+			SPACE_PRI,
+			SPACE_HOLD
+		FROM
+			SPACE_LIST
+		WHERE
+			SPACE_HOST = #{USER_ID}
+	]]>
+</select>
+----------------------------------공간 신청 글 리스트
+<select id="selectMyApplyList" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		SELECT 
+			APPLY_NUM
+			APPLY_TITLE,
+			APPLY_SIZE,
+			APPLY_PRI,
+			APPLY_HOLD
+		FROM
+			SPACE_APPLY_LIST
+		WHERE
+			APPLY_ID = #{USER_ID}
+	]]>
+</select>
+----------------------------------공간 등록 글 불러오기(수정)
+<select id="callSpaceBoard" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		SELECT 
+			*
+		FROM
+			SPACE_LIST
+		WHERE
+			SPACE_ID = #{SPACE_ID}
+	]]>
+</select>
+
+----------------------------------공간 신청 글 불러오기(수정)
+
+<select id="callApplyBoard" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		SELECT 
+			*
+		FROM
+			SPACE_APPLY_LIST
+		WHERE
+			APPLY_NUM = #{SPACE_ID}
+
+	]]>
+</select>
+
+----------------------------------공간 게시물 보류 변경 
+<update id="holdSpaceBoard" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		UPDATE
+			SPACE_LIST
+		SET
+			SPACE_HOLD = 'Y'
+		WHERE
+			SPACE_ID = #{SPACE_ID}
+
+	]]>
+</update>
+
+----------------------------------공간 게시물 보류 취소 
+<update id="cancleHoldSpaceBoard" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		UPDATE
+			SPACE_LIST
+		SET
+			SPACE_HOLD = 'N'
+		WHERE
+			SPACE_ID = #{SPACE_ID}
+
+	]]>
+</update>
+
+----------------------------------공간 글 삭제
+<update id="deleteApplyBoard" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		DELETE
+		FROM 
+			SPACE_LIST 
+		WHERE 
+			SPACE_ID = #{SPACE_ID}
+
+	]]>
+</update>
+
+
+----------------------------------공간 신청 글 삭제
+<update id="deleteApplyBoard" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		DELETE
+		FROM 
+			SPACE_APPLY_LIST 
+		WHERE 
+			APPLY_NUM = #{APPLY_NUM}
+
+	]]>
+</update>
+
+----------------------------------공간 신청 글 예약(요일) 삭제          [ 등록글 수정글 공통 부분 ] 
+<update id="deleteResDay" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		DELETE
+		FROM 
+			SRES_DAY
+		WHERE
+			SPACE_ID = #{ID}
+	]]>
+</update>
+
+----------------------------------공간 신청 글 예약(날짜)삭제  		[ 등록글 수정글 공통 부분 ]
+<update id="deleteResDate" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		DELETE
+		FROM 
+			SRES_DATE 
+		WHERE 
+			SPACE_ID = #{ID}
+	]]>
+</update>

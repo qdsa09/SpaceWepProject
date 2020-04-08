@@ -1,0 +1,44 @@
+----------------------------------------예약 관리 리스트 및 조건 검색
+<select id="selectAdminResList" parameterType="hashmap">
+	<![CDATA[
+		SELECT 
+			ROW_NUMBER()OVER(ORDER BY SPACE_ID DESC) RNUM,
+			RST.* FROM(
+			SELECT 
+				SPACE_ID,
+				SPACE_TITLE,
+				SPACE_USE,
+				SPACE_IMG,
+				SPACE_POS,
+				SPACE_PRI,
+				RES_APPLY_DATE,
+				USER_ID,
+				USER_PHONE,
+				RES_EMAIL,
+				RES_NAME,
+				RES_NUM
+			FROM 
+				RES_LIST R 
+			INNER JOIN 
+				SPACE_LIST 
+			ON R.RES_SPACE_ID = SPACE_ID
+			<if test="type.equals('name')">
+			WHERE RES_NAME = '%#{search}%'
+			</if>
+			<if test="type.equals('id')">
+			WHERE USER_ID = '%#{search}%'
+			</if>
+		)RST;
+	]]>
+</select>
+
+
+----------------------------------------예약 관리 리스트 및 조건 검색
+<update id="deleteAdminRes" parameterType="hashmap">
+	<![CDATA[
+		DELETE 
+			RES_LIST
+		WHERE
+			RES_NUM = #{RES_NUM}
+	]]>
+</update>
